@@ -22,15 +22,22 @@ zlib_files := \
     src/uncompr.c \
     src/zutil.c
 
-LOCAL_MODULE := libz
+
+# For the device (shared)
+# =====================================================
+LOCAL_MODULE := libzn
 LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS += -O3 -DUSE_MMAP
 LOCAL_SRC_FILES := $(zlib_files)
-ifeq ($(TARGET_ARCH),arm)
+ifeq ($(TARGET_ARCH), arm)
     LOCAL_SDK_VERSION := 9
 endif
 include $(BUILD_SHARED_LIBRARY)
 
+
+
+# For the device (static)
+# =====================================================
 include $(CLEAR_VARS)
 
 LOCAL_ARM_MODE := arm
@@ -38,7 +45,7 @@ LOCAL_MODULE := libz_static
 LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS += -O3 -DUSE_MMAP
 LOCAL_SRC_FILES := $(zlib_files)
-ifeq ($(TARGET_ARCH),arm)
+ifeq ($(TARGET_ARCH), arm)
     LOCAL_SDK_VERSION := 9
 endif
 include $(BUILD_STATIC_LIBRARY)

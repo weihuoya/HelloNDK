@@ -11,14 +11,18 @@ LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/../zlib
 
 LOCAL_SRC_FILES := \
-    jniwrapper.c \
-    glcontext.c \
-    glcube.c \
+    gltransform.cpp \
+    jniwrapper.cpp \
+    quaternion.cpp \
+    glcontext.cpp \
+    glwrapper.cpp \
+    glcube.cpp \
+    matrix.cpp \
+    touch.cpp \
+    asset.cpp \
     image.c \
-    touch.c \
-    log.c
 
-LOCAL_SHARED_LIBRARIES := png z
+LOCAL_SHARED_LIBRARIES := pngn zn
 
 LOCAL_LDLIBS := -lGLESv2 -llog -landroid
 

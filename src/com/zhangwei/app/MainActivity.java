@@ -24,6 +24,8 @@ public class MainActivity extends Activity {
         final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000 || isProbablyEmulator();
 
         if (supportsEs2) {
+            JNIWrapper.load_assets(getAssets());
+
             glSurfaceView = new MySurfaceView(this);
 
             if (isProbablyEmulator()) {
@@ -35,10 +37,9 @@ public class MainActivity extends Activity {
             // Render the view only when there is a change in the drawing data
             // glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
             glSurfaceView.setRenderer(new MyRenderer());
-            
+
             rendererSet = true;
             setContentView(glSurfaceView);
-            JNIWrapper.load_assets(getAssets());
         } else {
             // Should never be seen in production, since the manifest filters
             // unsupported devices.
@@ -55,7 +56,7 @@ public class MainActivity extends Activity {
                     || Build.MODEL.contains("Emulator")
                     || Build.MODEL.contains("Android SDK built for x86"));
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();

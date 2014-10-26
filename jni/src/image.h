@@ -3,6 +3,9 @@
 
 #include <GLES2/gl2.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
     int width;
@@ -17,5 +20,8 @@ RawImageData * load_raw_image_data_from_png(const void * png_data, int data_size
 
 void release_raw_image_data(RawImageData* data);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _IMAGE_H_ */

@@ -1,16 +1,39 @@
-#ifndef _GLCONTEXT_H_
-#define _GLCONTEXT_H_
+#ifndef __hellosdl__glcontext__
+#define __hellosdl__glcontext__
 
-void glcontext_initialize();
+#include "glwrapper.h"
+#include "glcube.h"
+#include "gltransform.h"
 
-void glcontext_load_shader();
 
-void glcontext_load_texture();
+class GLContext
+{
+public:
+    ~GLContext();
 
-void glcontext_surface_created();
+    static GLContext * instance();
 
-void glcontext_surface_changed(int width, int height);
+    void surfaceCreated();
+    void surfaceChanged(int width, int height);
+    void drawFrame();
 
-void glcontext_draw_frame();
+    void loadMatrix();
+    void loadShader();
+    void loadTexture();
 
-#endif /* _GLCONTEXT_H_ */
+    void incRotate(float rotateX, float rotateY, float rotateZ);
+    void incTranslate(float x, float y);
+    void incScale(float scale);
+
+private:
+    DISALLOW_IMPLICIT_CONSTRUCTORS(GLContext);
+
+    GLCube * cube_;
+    GLTransform * transform_;
+
+    GLuint shaderProgram_;
+    GLuint textureBuffer_;
+};
+
+
+#endif /* defined(__HelloSDL__glcontext__) */

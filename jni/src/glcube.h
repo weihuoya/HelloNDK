@@ -1,12 +1,25 @@
-#ifndef _GLCONTEXT_H_
-#define _GLCONTEXT_H_
+#ifndef __hellosdl__glcube__
+#define __hellosdl__glcube__
 
-void glcube_initialize();
+#include "glwrapper.h"
 
-void glcube_load_cube1();
 
-void glcube_load_cube2();
+class GLCube
+{
+public:
+    GLCube();
+    ~GLCube();
 
-void glcube_draw();
+    void init();
 
-#endif /* _GLCUBE_H_ */
+    void load1();
+    void load2();
+
+    void draw(GLuint shaderProgram);
+private:
+    GLuint * vboids_;
+    GLsizei count_;
+};
+
+
+#endif /* defined(__HelloSDL__glcube__) */

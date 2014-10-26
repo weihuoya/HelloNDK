@@ -40,8 +40,8 @@ common_CFLAGS := -std=gnu89 #-fvisibility=hidden ## -fomit-frame-pointer
 
 ifeq ($(HOST_OS),windows)
     ifeq ($(USE_MINGW),)
-    #		Case where we're building windows but not under linux (so it must be cygwin)
-    #		In this case, gcc cygwin doesn't recognize -fvisibility=hidden
+    # Case where we're building windows but not under linux (so it must be cygwin)
+    # In this case, gcc cygwin doesn't recognize -fvisibility=hidden
     $(info libpng: Ignoring gcc flag $(common_CFLAGS) on Cygwin)
     common_CFLAGS :=
 endif
@@ -52,9 +52,10 @@ common_C_INCLUDES +=
 common_COPY_HEADERS_TO := libpng
 common_COPY_HEADERS := png.h pngconf.h pngusr.h
 
+
+
 # For the device (static)
 # =====================================================
-
 include $(CLEAR_VARS)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CLANG := true
@@ -67,18 +68,20 @@ LOCAL_CFLAGS_arm64 := $(my_cflags_arm64)
 LOCAL_SRC_FILES_arm64 := $(my_src_files_arm)
 LOCAL_ADDRESS_SANITIZER := false
 
-LOCAL_C_INCLUDES += $(common_C_INCLUDES) \
-		    external/zlib
+LOCAL_C_INCLUDES += \
+    $(LOCAL_PATH)/../zlib
+
 LOCAL_SHARED_LIBRARIES := \
-    libz
+    libzn
 
 LOCAL_MODULE:= libpng_static
 
 include $(BUILD_STATIC_LIBRARY)
 
+
+
 # For the device (shared)
 # =====================================================
-
 include $(CLEAR_VARS)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CLANG := true
@@ -90,12 +93,13 @@ LOCAL_SRC_FILES_arm := $(my_src_files_arm)
 LOCAL_CFLAGS_arm64 := $(my_cflags_arm64)
 LOCAL_SRC_FILES_arm64 := $(my_src_files_arm)
 
-LOCAL_C_INCLUDES += $(common_C_INCLUDES) \
-		    external/zlib
-LOCAL_SHARED_LIBRARIES := \
-    libz
+LOCAL_C_INCLUDES += \
+    $(LOCAL_PATH)/../zlib
 
-LOCAL_MODULE:= libpng
+LOCAL_SHARED_LIBRARIES := \
+    libzn
+
+LOCAL_MODULE:= libpngn
 
 LOCAL_COPY_HEADERS_TO := $(common_COPY_HEADERS_TO)
 LOCAL_COPY_HEADERS := $(common_COPY_HEADERS)

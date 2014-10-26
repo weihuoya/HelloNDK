@@ -5,6 +5,8 @@ import android.content.res.AssetManager;
 public class JNIWrapper {
 
     static {
+    	System.loadLibrary("zn");
+    	System.loadLibrary("pngn");
         System.loadLibrary("main");
     }
 
