@@ -34,10 +34,10 @@ JNIEXPORT void JNICALL Java_com_zhangwei_app_JNIWrapper_on_1surface_1changed
 /*
  * Class:     com_zhangwei_app_JNIWrapper
  * Method:    on_draw_frame
- * Signature: ()V
+ * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_zhangwei_app_JNIWrapper_on_1draw_1frame
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     com_zhangwei_app_JNIWrapper

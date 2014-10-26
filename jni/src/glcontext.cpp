@@ -76,7 +76,7 @@ void GLContext::surfaceChanged(int width, int height)
 }
 
 
-void GLContext::drawFrame()
+void GLContext::drawFrame(long long delta)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

@@ -7,6 +7,7 @@ public class JNIWrapper {
     static {
     	System.loadLibrary("zn");
     	System.loadLibrary("pngn");
+    	System.loadLibrary("ft2n");
         System.loadLibrary("main");
     }
 
@@ -16,7 +17,7 @@ public class JNIWrapper {
 
     public static native void on_surface_changed(int width, int height);
 
-    public static native void on_draw_frame();
+    public static native void on_draw_frame(long current);
 
     public static native void on_touch_event(int touch_device_id_in, int pointer_finger_id_in, int action, float x, float y, float p);
     

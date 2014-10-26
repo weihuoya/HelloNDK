@@ -7,6 +7,7 @@ LOCAL_MODULE    := main
 # LOCAL_CFLAGS    := -Wall -Wextra
 
 LOCAL_C_INCLUDES := \
+    $(LOCAL_PATH)/../freetype/include \
     $(LOCAL_PATH)/../libpng \
     $(LOCAL_PATH)/../zlib
 
@@ -22,7 +23,7 @@ LOCAL_SRC_FILES := \
     asset.cpp \
     image.c \
 
-LOCAL_SHARED_LIBRARIES := pngn zn
+LOCAL_SHARED_LIBRARIES := pngn zn ft2n
 
 LOCAL_LDLIBS := -lGLESv2 -llog -landroid
 

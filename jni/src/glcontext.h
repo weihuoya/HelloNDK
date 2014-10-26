@@ -15,7 +15,7 @@ public:
 
     void surfaceCreated();
     void surfaceChanged(int width, int height);
-    void drawFrame();
+    void drawFrame(long long delta);
 
     void loadMatrix();
     void loadShader();

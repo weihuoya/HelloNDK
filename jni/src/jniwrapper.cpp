@@ -22,9 +22,9 @@ void JNICALL Java_com_zhangwei_app_JNIWrapper_on_1surface_1changed(JNIEnv * env,
 }
 
 
-void JNICALL Java_com_zhangwei_app_JNIWrapper_on_1draw_1frame(JNIEnv * env, jclass clazz)
+void JNICALL Java_com_zhangwei_app_JNIWrapper_on_1draw_1frame(JNIEnv * env, jclass clazz, jlong delta)
 {
-    GLContext::instance()->drawFrame();
+    GLContext::instance()->drawFrame(delta);
 }
 
 
