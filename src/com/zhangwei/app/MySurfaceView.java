@@ -84,7 +84,9 @@ public class MySurfaceView extends GLSurfaceView {
 	                p = event.getPressure(i);
 	                JNIWrapper.on_touch_event(touchDevId, pointerFingerId, action, x, y, p);
 	                break;
-
+	            case MotionEvent.ACTION_CANCEL:
+	            	JNIWrapper.on_touch_event(touchDevId, -1, action, 0, 0, 0);
+	            	break;
 	            default:
 	                break;
 	        }

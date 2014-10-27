@@ -21,9 +21,10 @@ public:
     void loadShader();
     void loadTexture();
 
-    void incRotate(float rotateX, float rotateY, float rotateZ);
-    void incTranslate(float x, float y);
-    void incScale(float scale);
+    void beginTransform();
+    void rotate(float rotateX, float rotateY, float rotateZ);
+    void translate(float x, float y);
+    void scale(float scale);
 
 private:
     DISALLOW_IMPLICIT_CONSTRUCTORS(GLContext);

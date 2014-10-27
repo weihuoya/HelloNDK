@@ -19,7 +19,10 @@ LOCAL_SRC_FILES := \
     glwrapper.cpp \
     glcube.cpp \
     matrix.cpp \
+    recognizer.cpp \
     touch.cpp \
+    input.cpp \
+    timer.cpp \
     asset.cpp \
     image.c \
 

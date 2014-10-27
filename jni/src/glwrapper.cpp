@@ -1,7 +1,6 @@
 #include "glwrapper.h"
 #include "image.h"
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -50,7 +49,6 @@ void logWrite(const char *fmt, ...)
     va_end(ap);
     free(message);
 }
-
 
 
 GLuint _checkGLError(const char * file, int line)

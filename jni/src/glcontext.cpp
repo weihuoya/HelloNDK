@@ -162,17 +162,26 @@ void GLContext::loadMatrix()
 }
 
 
-void GLContext::incRotate(float rotateX, float rotateY, float rotateZ)
+void GLContext::beginTransform()
 {
-    logWrite("rotate: (%f, %f)", rotateX, rotateY, rotateZ);
+    transform_->start();
 }
 
-void GLContext::incScale(float scale)
+void GLContext::rotate(float rotateX, float rotateY, float rotateZ)
 {
-    logWrite("scale: %f", scale);
+    logWrite("rotate: (%.02f, %.02f, %.02f)", rotateX, rotateY, rotateZ);
+    transform_->rotate(rotateX, rotateY, rotateZ);
 }
 
-void GLContext::incTranslate(float x, float y)
+void GLContext::scale(float scale)
 {
-    logWrite("translate: (%f, %f)", x, y);
+    logWrite("scale: %.02f", scale);
+    transform_->scale(scale);
 }
+
+void GLContext::translate(float x, float y)
+{
+    logWrite("translate: (%.02f, %.02f)", x, y);
+    transform_->translate(x, y);
+}
+

@@ -1,22 +1,25 @@
 #ifndef _TOUCH_H_
 #define _TOUCH_H_
 
+#include <vector>
+#include <memory>
+
+#include "input.h"
+#include "recognizer.h"
+
 #define TOUCH_MAX_FINGERS 10
 
 typedef int TouchID;
-typedef int FingerID;
-
 
 class Touch
 {
 public:
-    typedef struct Finger
-    {
-        FingerID id;
-        float x;
-        float y;
-        float pressure;
-    } Finger;
+    enum EVENT {
+        EVENT_BEGAN=1,
+        EVENT_MOVED,
+        EVENT_ENDED,
+        EVENT_CANCELED,
+    };
 
     ~Touch();
 
@@ -33,12 +36,23 @@ protected:
     void updateFinger(TouchID touchid, FingerID fingerid, float x, float y, float pressure);
     void removeFinger(TouchID touchid, FingerID fingerid, float x, float y, float pressure);
 
+    void handleTouch(int action);
+    void recognize(const Input * input);
+
 private:
     DISALLOW_IMPLICIT_CONSTRUCTORS(Touch);
 
+    Finger fingers_[TOUCH_MAX_FINGERS];
+
     TouchID id_;
     int size_;
-    Finger fingers_[TOUCH_MAX_FINGERS];
+
+    size_t prevFingers_;
+    std::shared_ptr<Input> firstInput_;
+    std::shared_ptr<Input> firstMultiple_;
+    std::shared_ptr<Input> lastInterval_;
+
+    std::vector< std::shared_ptr<Recognizer> > recognizers_;
 };
 
 
