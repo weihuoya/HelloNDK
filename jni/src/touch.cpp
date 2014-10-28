@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "glwrapper.h"
-#include "glcontext.h"
+#include "recognizer.h"
 #include "touch.h"
 #include "timer.h"
 
@@ -52,13 +52,6 @@ static inline uint32_t getDirection(float x, float y)
 // Touch
 Touch::Touch() : id_(0), size_(0)
 {
-    /*
-    recognizers_.emplace_back(new TapRecognizer());
-    recognizers_.emplace_back(new PanRecognizer());
-    recognizers_.emplace_back(new PinchRecognizer());
-    recognizers_.emplace_back(new RotateRecognizer());
-    recognizers_.emplace_back(new SwipeRecognizer());
-    */
 }
 
 Touch::~Touch()
@@ -203,7 +196,7 @@ void Touch::handleTouch(int action)
             break;
         case EVENT_CANCELED:
             isFinal = true;
-            eventType = Input::INPUT_END;
+            eventType = Input::INPUT_CANCEL;
             break;
         default:
             break;
@@ -227,7 +220,11 @@ void Touch::handleTouch(int action)
         input->centerX = finger->x;
         input->centerY = finger->y;
 
-        firstMultiple_.reset();
+        if(firstMultiple_)
+        {
+            firstMultiple_.reset();
+            firstInput_ = input;
+        }
     }
     else if(numFingers > 1)
     {
@@ -331,78 +328,18 @@ void Touch::handleTouch(int action)
     input->velocityY = velocityY;
     input->direction = direction;
 
-    this->recognize(input.get());
+    Recognizer::instance()->recognize(input.get());
 
     prevFingers_ = numFingers;
 
     if(isFinal)
     {
         logWrite("final reset recognizer");
+        Recognizer::instance()->reset();
         firstInput_.reset();
         firstMultiple_.reset();
         lastInterval_.reset();
     }
-}
-
-
-void Touch::recognize(const Input * input)
-{
-    int numFingers = this->size_;
-    int eventType = input->type;
-
-    if(eventType == Input::INPUT_START)
-    {
-        if(input->isFirst)
-        {
-            GLContext::instance()->beginTransform();
-        }
-    }
-    else if(eventType == Input::INPUT_MOVE)
-    {
-        if(numFingers == 1)
-        {
-            if(input->distance > 16.0)
-            {
-                logWrite("[touch] move: %.02f, %.02f, %.02f, %.02f", input->deltaX, input->deltaY, input->angle, input->distance);
-                GLContext::instance()->translate(input->deltaX/96., input->deltaY/96.);
-            }
-        }
-        else if(numFingers == 2)
-        {
-            if(input->rotation < 16.0)
-            {
-                if(input->scale > 1.15 || input->scale < 0.95)
-                {
-                    logWrite("[touch] pinch: %.02f", input->scale);
-                    GLContext::instance()->scale(input->scale);
-                }
-                else
-                {
-                    logWrite("[touch] pan: %.02f", input->distance);
-                }
-            }
-            else
-            {
-                logWrite("[touch] rotate: %.02f", input->rotation);
-                GLContext::instance()->rotate(input->scale, input->scale, input->scale);
-            }
-        }
-    }
-    else if(eventType == Input::INPUT_END)
-    {
-        if(numFingers == 1)
-        {
-            if(input->deltaTime < 250)
-            {
-                logWrite("[touch] tab: %.02f, %.02f", input->centerX, input->centerY);
-            }
-        }
-    }
-
-    /*for(auto recognizer : recognizers_)
-    {
-        recognizer->recognize(input);
-    }*/
 }
 
 
@@ -412,6 +349,8 @@ void Touch::reset()
     size_ = 0;
 
     prevFingers_ = 0;
+
+    Recognizer::instance()->reset();
 
     firstInput_.reset();
     firstMultiple_.reset();

@@ -37,7 +37,6 @@ protected:
     void removeFinger(TouchID touchid, FingerID fingerid, float x, float y, float pressure);
 
     void handleTouch(int action);
-    void recognize(const Input * input);
 
 private:
     DISALLOW_IMPLICIT_CONSTRUCTORS(Touch);

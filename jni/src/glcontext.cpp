@@ -67,12 +67,13 @@ void GLContext::surfaceChanged(int width, int height)
     // projection
     float aspect = (float)width / (float)height;
     Matrix::setIdentityM(projectionMatrix);
-    //Matrix::perspectiveM(projectionMatrix, 45.0f, aspect, 3.0f, 7.0f);
     Matrix::frustumM(projectionMatrix, -1, 1, -1, 1, 2, 10);
 
     // view
-    //Matrix::setIdentityM(viewMatrix);
     Matrix::setLookAtM(viewMatrix, 0.0f, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+
+    //model
+    Matrix::setIdentityM(modelMatrix);
 }
 
 
@@ -145,16 +146,13 @@ void GLContext::loadTexture()
 void GLContext::loadMatrix()
 {
     // model
-    //Matrix::setIdentityM(modelMatrix);
     //Matrix::translateM(modelMatrix, 0.0f, 0.0f, -4.0f);
 
-    transform_->getModelViewMatrix(modelMatrix);
+    //transform_->getModelViewMatrix(modelMatrix);
 
     // projection * view * model
-    //Matrix::multiplyMM(temporaryMatrix_, viewMatrix, modelMatrix);
-    Matrix::multiplyMM(mvpMatrix, projectionMatrix, modelMatrix);
-
-    //Matrix::setIdentityM(mvpMatrix);
+    Matrix::multiplyMM(mvpMatrix, viewMatrix, modelMatrix);
+    Matrix::multiplyMM(mvpMatrix, projectionMatrix, mvpMatrix);
 
     // mvp
     GLint mvpSlot = glGetUniformLocation(shaderProgram_, "u_mvpmatrix");
@@ -164,24 +162,27 @@ void GLContext::loadMatrix()
 
 void GLContext::beginTransform()
 {
-    transform_->start();
+    //transform_->start();
 }
 
 void GLContext::rotate(float rotateX, float rotateY, float rotateZ)
 {
     logWrite("rotate: (%.02f, %.02f, %.02f)", rotateX, rotateY, rotateZ);
-    transform_->rotate(rotateX, rotateY, rotateZ);
+    Matrix::setRotateM(modelMatrix, 30.0f, 0.0f, 1.0f, 0.0f);
+    //transform_->rotate(rotateX, rotateY, rotateZ);
 }
 
 void GLContext::scale(float scale)
 {
     logWrite("scale: %.02f", scale);
-    transform_->scale(scale);
+    Matrix::scaleM(modelMatrix, 0.0f, 0.0f, 0.8f);
+    //transform_->scale(scale);
 }
 
 void GLContext::translate(float x, float y)
 {
     logWrite("translate: (%.02f, %.02f)", x, y);
-    transform_->translate(x, y);
+    Matrix::translateM(modelMatrix, 0.0f, 0.0f, -4.0f);
+    //transform_->translate(x, y);
 }
 
