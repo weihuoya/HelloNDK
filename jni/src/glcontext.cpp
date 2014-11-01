@@ -13,6 +13,11 @@ static float projectionMatrix[16];
 static float mvpMatrix[16];
 
 
+static float lightInModelSpace[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+static float lightInWorldSpace[4];
+static float lightInEyeSpace[4];
+static float lightModelMatrix[16];
+
 
 GLContext::GLContext() :
     cube_(0), transform_(0),
@@ -35,7 +40,6 @@ GLContext * GLContext::instance()
     return &context;
 }
 
-
 void GLContext::surfaceCreated()
 {
     cube_ = new GLCube();
@@ -51,14 +55,12 @@ void GLContext::surfaceCreated()
 
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-
     // load
     this->loadShader();
     this->loadTexture();
 
     cube_->init();
     cube_->load1();
-
 }
 
 
@@ -74,6 +76,12 @@ void GLContext::surfaceChanged(int width, int height)
 
     //model
     Matrix::setIdentityM(modelMatrix);
+    Matrix::translateM(modelMatrix, 0.0f, 0.0f, -4.0f);
+    //Matrix::rotateM(modelMatrix, 45.0f, 0.0f, 1.0f, 0.0f);
+    //Matrix::rotateM(modelMatrix, 45.0f, 0.0f, 0.0f, 1.0f);
+
+    // light
+    this->loadLight();
 }
 
 
@@ -85,7 +93,6 @@ void GLContext::drawFrame(long long delta)
 
     cube_->draw(shaderProgram_);
 }
-
 
 void GLContext::loadShader()
 {
@@ -104,7 +111,6 @@ void GLContext::loadShader()
     delete [] fshader;
     delete [] vshader;
 }
-
 
 void GLContext::loadTexture()
 {
@@ -142,23 +148,39 @@ void GLContext::loadTexture()
     delete [] data;
 }
 
-
 void GLContext::loadMatrix()
 {
+    GLint mvSlot = glGetUniformLocation(shaderProgram_, "u_mvmatrix");
+    GLint mvpSlot = glGetUniformLocation(shaderProgram_, "u_mvpmatrix");
+
     // model
     //Matrix::translateM(modelMatrix, 0.0f, 0.0f, -4.0f);
 
     //transform_->getModelViewMatrix(modelMatrix);
 
-    // projection * view * model
+    // view * model
     Matrix::multiplyMM(mvpMatrix, viewMatrix, modelMatrix);
-    Matrix::multiplyMM(mvpMatrix, projectionMatrix, mvpMatrix);
+    glUniformMatrix4fv(mvSlot, 1, 0, mvpMatrix);
 
-    // mvp
-    GLint mvpSlot = glGetUniformLocation(shaderProgram_, "u_mvpmatrix");
+    // projection * view * model
+    Matrix::multiplyMM(mvpMatrix, projectionMatrix, mvpMatrix);
     glUniformMatrix4fv(mvpSlot, 1, 0, mvpMatrix);
 }
 
+void GLContext::loadLight()
+{
+    // Calculate position of the light. Rotate and then push into the distance.
+    Matrix::setIdentityM(lightModelMatrix);
+    Matrix::translateM(lightModelMatrix, 0.0f, 0.0f, 1.0f);
+    //Matrix::rotateM(lightModelMatrix, 30.0f, 0.0f, 1.0f, 0.0f);
+    //Matrix::translateM(lightModelMatrix, 0.0f, 0.0f, 2.0f);
+
+    Matrix::multiplyMV(lightInWorldSpace, lightModelMatrix, lightInModelSpace);
+    Matrix::multiplyMV(lightInEyeSpace, viewMatrix, lightInWorldSpace);
+
+    GLint lightSlot = glGetUniformLocation(shaderProgram_, "u_lightpos");
+    glUniform3f(lightSlot, lightInEyeSpace[0], lightInEyeSpace[1], lightInEyeSpace[2]);
+}
 
 void GLContext::beginTransform()
 {
@@ -168,21 +190,21 @@ void GLContext::beginTransform()
 void GLContext::rotate(float rotateX, float rotateY, float rotateZ)
 {
     logWrite("rotate: (%.02f, %.02f, %.02f)", rotateX, rotateY, rotateZ);
-    Matrix::setRotateM(modelMatrix, 30.0f, 0.0f, 1.0f, 0.0f);
+    //Matrix::setRotateM(modelMatrix, 30.0f, 0.0f, 1.0f, 0.0f);
     //transform_->rotate(rotateX, rotateY, rotateZ);
 }
 
 void GLContext::scale(float scale)
 {
     logWrite("scale: %.02f", scale);
-    Matrix::scaleM(modelMatrix, 0.0f, 0.0f, 0.8f);
+    //Matrix::scaleM(modelMatrix, 0.0f, 0.0f, 0.8f);
     //transform_->scale(scale);
 }
 
 void GLContext::translate(float x, float y)
 {
     logWrite("translate: (%.02f, %.02f)", x, y);
-    Matrix::translateM(modelMatrix, 0.0f, 0.0f, -4.0f);
+    Matrix::translateM(modelMatrix, x/10., -y/10., 0.0f);
     //transform_->translate(x, y);
 }
 

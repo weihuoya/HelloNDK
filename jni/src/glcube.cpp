@@ -4,8 +4,9 @@
 #define TEX_COORD_MAX   4.0f
 
 
-typedef struct {
+typedef struct Vertex {
     float Position[3];
+    float Normal[3];
     float Color[4];
     float TexCoord[2];
 } Vertex;
@@ -19,7 +20,7 @@ GLCube::GLCube() : vboids_(new GLuint[2]), count_(0)
 GLCube::~GLCube()
 {
     glDeleteBuffers(2, vboids_);
-    delete[] vboids_;
+    delete [] vboids_;
 }
 
 void GLCube::init()
@@ -49,41 +50,41 @@ void GLCube::load1()
 
     const Vertex vertices[] = {
         // Front
-        {{+1, -1, +0}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
-        {{+1, +1, +0}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
-        {{-1, +1, +0}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
-        {{-1, -1, +0}, {1, 0, 0, 1}, {0, 0}},
+        {{+1, -1, +0}, {0, 0, 1}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
+        {{+1, +1, +0}, {0, 0, 1}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
+        {{-1, +1, +0}, {0, 0, 1}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
+        {{-1, -1, +0}, {0, 0, 1}, {1, 0, 0, 1}, {0, 0}},
         // Back
-        {{+1, -1, -2}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
-        {{+1, +1, -2}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
-        {{-1, +1, -2}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
-        {{-1, -1, -2}, {1, 0, 0, 1}, {0, 0}},
+        {{+1, -1, -2}, {0, 0, -1}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
+        {{+1, +1, -2}, {0, 0, -1}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
+        {{-1, +1, -2}, {0, 0, -1}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
+        {{-1, -1, -2}, {0, 0, -1}, {1, 0, 0, 1}, {0, 0}},
         // Left
-        {{-1, -1, +0}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
-        {{-1, +1, +0}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
-        {{-1, +1, -2}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
-        {{-1, -1, -2}, {1, 0, 0, 1}, {0, 0}},
+        {{-1, -1, +0}, {-1, 0, 0}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
+        {{-1, +1, +0}, {-1, 0, 0}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
+        {{-1, +1, -2}, {-1, 0, 0}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
+        {{-1, -1, -2}, {-1, 0, 0}, {1, 0, 0, 1}, {0, 0}},
         // Right
-        {{+1, -1, -2}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
-        {{+1, +1, -2}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
-        {{+1, +1, +0}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
-        {{+1, -1, +0}, {1, 0, 0, 1}, {0, 0}},
+        {{+1, -1, -2}, {1, 0, 0}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
+        {{+1, +1, -2}, {1, 0, 0}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
+        {{+1, +1, +0}, {1, 0, 0}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
+        {{+1, -1, +0}, {1, 0, 0}, {1, 0, 0, 1}, {0, 0}},
         // Top
-        {{+1, +1, +0}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
-        {{+1, +1, -2}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
-        {{-1, +1, -2}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
-        {{-1, +1, +0}, {1, 0, 0, 1}, {0, 0}},
+        {{+1, +1, +0}, {0, 1, 0}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
+        {{+1, +1, -2}, {0, 1, 0}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
+        {{-1, +1, -2}, {0, 1, 0}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
+        {{-1, +1, +0}, {0, 1, 0}, {1, 0, 0, 1}, {0, 0}},
         // Bottom
-        {{+1, -1, -2}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
-        {{+1, -1, +0}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
-        {{-1, -1, +0}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
-        {{-1, -1, -2}, {1, 0, 0, 1}, {0, 0}},
+        {{+1, -1, -2}, {0, -1, 0}, {1, 0, 0, 1}, {TEX_COORD_MAX, 0}},
+        {{+1, -1, +0}, {0, -1, 0}, {0, 1, 0, 1}, {TEX_COORD_MAX, TEX_COORD_MAX}},
+        {{-1, -1, +0}, {0, -1, 0}, {0, 0, 1, 1}, {0, TEX_COORD_MAX}},
+        {{-1, -1, -2}, {0, -1, 0}, {1, 0, 0, 1}, {0, 0}},
     };
     glBindBuffer(GL_ARRAY_BUFFER, vboids_[1]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    count_ = sizeof(indices)/sizeof(indices[0]);
-    logWrite("elements: %d, indices: %d, vertices: %d", count_, sizeof(indices), sizeof(vertices));
+    count_ = ARRAYSIZE(indices);
+    //logWrite("elements: %d, indices: %d, vertices: %d", count_, sizeof(indices), sizeof(vertices));
 }
 
 void GLCube::load2()
@@ -100,21 +101,21 @@ void GLCube::load2()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     const Vertex vertices[] = {
-        {{+0.5f, -0.5f, +0.0f},  {1.0f, 0.0f, 0.0f, 1.0f},  {1.0f, 0.0f}},
-        {{+0.5f, +0.5f, +0.0f},  {1.0f, 0.0f, 0.0f, 1.0f},  {1.0f, 1.0f}},
-        {{-0.5f, +0.5f, +0.0f},  {0.0f, 1.0f, 0.0f, 1.0f},  {0.0f, 1.0f}},
-        {{-0.5f, -0.5f, +0.0f},  {0.0f, 1.0f, 0.0f, 1.0f},  {0.0f, 0.0f}},
+        {{+0.5f, -0.5f, +0.0f},  {0, 0, 1}, {1.0f, 0.0f, 0.0f, 1.0f},  {1.0f, 0.0f}},
+        {{+0.5f, +0.5f, +0.0f},  {0, 0, 1}, {1.0f, 0.0f, 0.0f, 1.0f},  {1.0f, 1.0f}},
+        {{-0.5f, +0.5f, +0.0f},  {0, 0, 1}, {0.0f, 1.0f, 0.0f, 1.0f},  {0.0f, 1.0f}},
+        {{-0.5f, -0.5f, +0.0f},  {0, 0, 1}, {0.0f, 1.0f, 0.0f, 1.0f},  {0.0f, 0.0f}},
 
-        {{+0.5f, -0.5f, -0.5f},  {1.0f, 0.0f, 0.0f, 1.0f},  {1.0f, 0.0f}},
-        {{+0.5f, +0.5f, -0.5f},  {1.0f, 0.0f, 0.0f, 1.0f},  {1.0f, 1.0f}},
-        {{-0.5f, +0.5f, -0.5f},  {0.0f, 1.0f, 0.0f, 1.0f},  {0.0f, 1.0f}},
-        {{-0.5f, -0.5f, -0.5f},  {0.0f, 1.0f, 0.0f, 1.0f},  {0.0f, 0.0f}},
+        {{+0.5f, -0.5f, -0.5f},  {0, 0, 1}, {1.0f, 0.0f, 0.0f, 1.0f},  {1.0f, 0.0f}},
+        {{+0.5f, +0.5f, -0.5f},  {0, 0, 1}, {1.0f, 0.0f, 0.0f, 1.0f},  {1.0f, 1.0f}},
+        {{-0.5f, +0.5f, -0.5f},  {0, 0, 1}, {0.0f, 1.0f, 0.0f, 1.0f},  {0.0f, 1.0f}},
+        {{-0.5f, -0.5f, -0.5f},  {0, 0, 1}, {0.0f, 1.0f, 0.0f, 1.0f},  {0.0f, 0.0f}},
     };
     glBindBuffer(GL_ARRAY_BUFFER, vboids_[1]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    count_ = sizeof(indices)/sizeof(indices[0]);
-    logWrite("elements: %d, indices: %d, vertices: %d", count_, sizeof(indices), sizeof(vertices));
+    count_ = ARRAYSIZE(indices);
+    //logWrite("elements: %d, indices: %d, vertices: %d", count_, sizeof(indices), sizeof(vertices));
 }
 
 
@@ -127,17 +128,22 @@ void GLCube::draw(GLuint shaderProgram)
     // position
     GLint positionSlot = glGetAttribLocation(shaderProgram, "a_position");
     glEnableVertexAttribArray(positionSlot);
-    glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+    glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, Position)));
+
+    // normal
+    GLint normalSlot = glGetAttribLocation(shaderProgram, "a_normal");
+    glEnableVertexAttribArray(normalSlot);
+    glVertexAttribPointer(normalSlot, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, Normal)));
 
     // color
     GLint colorSlot = glGetAttribLocation(shaderProgram, "a_color");
     glEnableVertexAttribArray(colorSlot);
-    glVertexAttribPointer(colorSlot, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(12));
+    glVertexAttribPointer(colorSlot, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, Color)));
 
     // texcoord
     GLint texcoordSlot = glGetAttribLocation(shaderProgram, "a_texcoord");
     glEnableVertexAttribArray(texcoordSlot);
-    glVertexAttribPointer(texcoordSlot, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(28));
+    glVertexAttribPointer(texcoordSlot, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, TexCoord)));
 
     // Draw cube geometry using indices from VBO 1
     //glDrawElements(GL_TRIANGLES, count_, GL_UNSIGNED_BYTE, 0);
